@@ -298,6 +298,7 @@
   <div class="logo">AGRI <span>TRACKING</span></div>
   <nav>
     <a href="#gamma">Gamma</a>
+    <a href="#attrezzature">Attrezzature</a>
     <a href="#conformita">Conformità</a>
     <a href="#rete">Rete</a>
     <a href="#contatti">Contatti</a>
@@ -377,6 +378,32 @@
     <div class="slider-nav">
       <button id="slider-prev" aria-label="Precedente">←</button>
       <button id="slider-next" aria-label="Successivo">→</button>
+    </div>
+  </div>
+</section>
+
+<section class="content" id="attrezzature">
+  <div class="section-head">
+    <div class="eyebrow">Attrezzature</div>
+    <h2>Attacchi e implementi disponibili</h2>
+    <p>Caricatore frontale e attrezzatura agricola compatibile con tutta la gamma, per adattare ogni trattore al lavoro da svolgere.</p>
+  </div>
+  <div class="slider-wrap">
+    <div class="slider" id="implementi-slider">
+      <div class="card"><img class="thumb" src="impl-caricatore.jpg" alt="Caricatore frontale"><div class="body"><h3>Caricatore frontale</h3><p>3/4/5 gruppi idraulici disponibili per attrezzature ausiliarie, attacco rapido a perno o a gancio.</p></div></div>
+      <div class="card"><img class="thumb" src="impl-aratro.jpg" alt="Aratro"><div class="body"><h3>Aratro</h3><p>Aratro a vomere per lavorazione del terreno in profondità, attacco a tre punti categoria I/II.</p></div></div>
+      <div class="card"><img class="thumb" src="impl-aratro-dischi.jpg" alt="Aratro a dischi"><div class="body"><h3>Aratro a dischi</h3><p>Dischi indipendenti per terreni duri e pietrosi, minor manutenzione rispetto al vomere tradizionale.</p></div></div>
+      <div class="card"><img class="thumb" src="impl-erpice-dischi.jpg" alt="Erpice a dischi"><div class="body"><h3>Erpice a dischi</h3><p>Doppia fila di dischi per affinamento del terreno dopo l'aratura, telaio compatto attacco 3 punti.</p></div></div>
+      <div class="card"><img class="thumb" src="impl-erpice.jpg" alt="Erpice"><div class="body"><h3>Erpice a rulli</h3><p>Erpice a dischi a larghezza maggiorata per preparazione rapida del letto di semina su grandi superfici.</p></div></div>
+      <div class="card"><img class="thumb" src="impl-vomere-dischi.jpg" alt="Vomere a dischi"><div class="body"><h3>Vomere a dischi</h3><p>Configurazione a dischi multipli per rivoltamento del terreno con minor resistenza di trazione.</p></div></div>
+      <div class="card"><img class="thumb" src="impl-fresa.jpg" alt="Fresa rotativa"><div class="body"><h3>Fresa rotativa</h3><p>Lame rotanti per amminutamento del terreno in un solo passaggio, presa di forza 540/1000.</p></div></div>
+      <div class="card"><img class="thumb" src="impl-coltivatore.jpg" alt="Coltivatore"><div class="body"><h3>Coltivatore</h3><p>Ancore rigide per sarchiatura e decompattazione superficiale tra le file di coltivazione.</p></div></div>
+      <div class="card"><img class="thumb" src="impl-irroratrice.jpg" alt="Irroratrice"><div class="body"><h3>Irroratrice portata</h3><p>Serbatoio maggiorato con barra a getto per trattamenti fitosanitari, montaggio posteriore.</p></div></div>
+      <div class="card"><img class="thumb" src="impl-raccoglipatate.jpg" alt="Raccoglipatate"><div class="body"><h3>Raccoglipatate</h3><p>Nastro a barre per la raccolta di patate e tuberi, ruota di appoggio regolabile in profondità.</p></div></div>
+    </div>
+    <div class="slider-nav">
+      <button id="impl-prev" aria-label="Precedente">←</button>
+      <button id="impl-next" aria-label="Successivo">→</button>
     </div>
   </div>
 </section>
@@ -589,6 +616,18 @@ if(gammaSlider){
   });
   document.getElementById('slider-next').addEventListener('click', () => {
     gammaSlider.scrollBy({left: cardWidth(), behavior:'smooth'});
+  });
+}
+
+/* ============ IMPLEMENTI SLIDER ============ */
+const implSlider = document.getElementById('implementi-slider');
+if(implSlider){
+  const implCardWidth = () => implSlider.querySelector('.card').getBoundingClientRect().width + 20;
+  document.getElementById('impl-prev').addEventListener('click', () => {
+    implSlider.scrollBy({left: -implCardWidth(), behavior:'smooth'});
+  });
+  document.getElementById('impl-next').addEventListener('click', () => {
+    implSlider.scrollBy({left: implCardWidth(), behavior:'smooth'});
   });
 }
 
