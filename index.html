@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AGRI TRACKING — Leaders Drive</title>
+<meta name="description" content="AGRI TRACKING — trattori agricoli 20–300 HP progettati a Weifang, Cina. Ingegneria verificata, conformità documentata, rete di assistenza globale.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<script src="assets/frames/manifest.js" onerror="window.FRAME_MANIFEST=null"></script>
+
+<style>
+  :root{
+    --bg:#0b1220;
+    --accent1:#8fa3b8;
+    --accent2:#3ea6ff;
+    --grad: linear-gradient(90deg, var(--accent1), var(--accent2));
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:auto;}
+  body{
+    background: var(--bg);
+    color: rgba(255,255,255,.6);
+    font-family: var(--font-body);
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family: var(--font-display);
+    font-weight:600;
+    line-height:1.05;
+    letter-spacing:-.01em;
+  }
+  .grad-text{
+    background: linear-gradient(180deg, #fff 0%, var(--accent2) 140%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  a{color:inherit; text-decoration:none;}
+
+  /* ---------- NAVBAR ---------- */
+  #navbar{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px 40px;
+    background:rgba(11,18,32,0);
+    backdrop-filter: blur(0px);
+    border-bottom:1px solid rgba(255,255,255,0);
+    transition: background .4s ease, backdrop-filter .4s ease, border-color .4s ease;
+  }
+  #navbar.visible{
+    background:rgba(11,18,32,.55);
+    backdrop-filter: blur(14px);
+    border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  #navbar .logo{font-family:var(--font-display); font-weight:700; letter-spacing:.04em; font-size:15px; color:#fff;}
+  #navbar .logo span{color:var(--accent2);}
+  #navbar nav{display:flex; gap:32px; font-size:13px; color:rgba(255,255,255,.7);}
+  #navbar nav a:hover{color:#fff;}
+  #navbar .nav-cta{
+    font-size:13px; padding:9px 18px; border-radius:999px;
+    border:1px solid transparent;
+    background: linear-gradient(var(--bg), var(--bg)) padding-box, var(--grad) border-box;
+    color:#fff;
+  }
+  #progress{
+    position:fixed; top:0; left:0; height:2px; width:0%; z-index:60;
+    background: var(--grad);
+    transition: width .05s linear;
+  }
+
+  /* ---------- STAGE / CANVAS ---------- */
+  #stage{ position:relative; height:500vh; background:var(--bg); }
+  #stage .sticky{
+    position:sticky; top:0; height:100vh; width:100%;
+    overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #reveal-canvas{
+    position:absolute; inset:0; width:100%; height:100%;
+    display:block;
+  }
+  #vignette{
+    position:absolute; inset:0; pointer-events:none;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,.55) 100%);
+  }
+  #grain{
+    position:absolute; inset:0; pointer-events:none; opacity:.04; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-size:220px 220px;
+  }
+  #loader{
+    position:absolute; inset:0; z-index:5;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:var(--bg); gap:16px;
+    transition:opacity .6s ease;
+  }
+  #loader .pct{font-family:var(--font-display); font-size:13px; color:rgba(255,255,255,.5); letter-spacing:.08em;}
+  #loader .bar{width:160px; height:1px; background:rgba(255,255,255,.15); position:relative;}
+  #loader .bar i{position:absolute; left:0; top:0; height:100%; width:0%; background:var(--grad);}
+
+  /* ---------- BEATS (copy overlay) ---------- */
+  .beat{
+    position:absolute; z-index:10; max-width:460px;
+    padding:0 40px;
+    opacity:0; transform:translateY(24px);
+    transition: opacity .5s ease, transform .5s ease;
+    pointer-events:none;
+  }
+  .beat.active{opacity:1; transform:translateY(0);}
+  .beat .eyebrow{
+    font-family:var(--font-display); font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--accent2); margin-bottom:14px; display:inline-block;
+    position:relative; padding-bottom:10px;
+  }
+  .beat .eyebrow::after{
+    content:''; position:absolute; left:0; bottom:0; height:2px; width:36px; background:var(--grad);
+  }
+  .beat h2{font-size:clamp(28px,3.4vw,44px); color:#fff; margin-bottom:16px;}
+  .beat p{font-size:15px; line-height:1.7; color:rgba(255,255,255,.62); max-width:420px;}
+  .beat ul{list-style:none; display:flex; flex-direction:column; gap:10px; margin-top:6px;}
+  .beat ul li{font-size:14.5px; line-height:1.5; color:rgba(255,255,255,.75); padding-left:22px; position:relative;}
+  .beat ul li::before{
+    content:''; position:absolute; left:0; top:7px; width:8px; height:8px; border-radius:2px;
+    background:var(--grad);
+  }
+
+  #beat-hero{ left:50%; top:50%; transform:translate(-50%, -40%); text-align:center; max-width:720px; }
+  #beat-hero.active{ transform:translate(-50%, -50%); }
+  #beat-hero .eyebrow{margin-left:auto; margin-right:auto;}
+  #beat-hero .eyebrow::after{left:50%; transform:translateX(-50%);}
+  #beat-hero h1{font-size:clamp(46px,8vw,108px); margin-bottom:10px;}
+  #beat-hero .sub{font-family:var(--font-display); font-size:clamp(15px,1.6vw,20px); color:rgba(255,255,255,.75); margin-bottom:18px;}
+  #beat-hero .line{font-size:14px; color:rgba(255,255,255,.45); letter-spacing:.03em;}
+
+  #beat-2{ left:8%; top:50%; transform:translateY(-40%); }
+  #beat-2.active{ transform:translateY(-50%); }
+  #beat-3{ right:8%; top:50%; transform:translateY(-40%); text-align:right; }
+  #beat-3.active{ transform:translateY(-50%); }
+  #beat-3 .eyebrow::after{ right:0; left:auto; }
+  #beat-3 ul li{padding-left:0; padding-right:22px;}
+  #beat-3 ul li::before{left:auto; right:0;}
+  #beat-4{ left:8%; top:50%; transform:translateY(-40%); }
+  #beat-4.active{ transform:translateY(-50%); }
+
+  #beat-cta{ left:50%; top:50%; transform:translate(-50%,-40%); text-align:center; max-width:640px; }
+  #beat-cta.active{ transform:translate(-50%,-50%); }
+  #beat-cta h2{font-size:clamp(32px,4.6vw,56px);}
+  #beat-cta .ctas{display:flex; gap:16px; justify-content:center; margin-top:28px; pointer-events:auto;}
+  .btn{
+    font-family:var(--font-display); font-size:14px; font-weight:600; letter-spacing:.02em;
+    padding:14px 30px; border-radius:999px; cursor:pointer; border:none;
+  }
+  .btn-primary{ background:var(--grad); color:#0b1220; }
+  .btn-secondary{
+    color:#fff; background:linear-gradient(var(--bg), var(--bg)) padding-box, var(--grad) border-box;
+    border:1px solid transparent;
+  }
+
+  /* ---------- SECTIONS BELOW CANVAS ---------- */
+  section.content{ position:relative; z-index:2; background:var(--bg); padding:120px 8% 100px; }
+  .section-head{ max-width:640px; margin:0 auto 60px; text-align:center; }
+  .section-head .eyebrow{
+    font-family:var(--font-display); font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--accent2);
+  }
+  .section-head h2{ font-size:clamp(28px,3.6vw,42px); color:#fff; margin-top:14px; }
+  .section-head p{ margin-top:14px; font-size:15px; }
+
+  .slider-wrap{ position:relative; max-width:1200px; margin:0 auto; }
+  .slider{
+    display:flex; gap:20px; overflow-x:auto; scroll-snap-type:x mandatory;
+    padding:6px 6px 26px; scrollbar-width:none;
+  }
+  .slider::-webkit-scrollbar{ display:none; }
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0));
+    border:1px solid rgba(255,255,255,.08); border-radius:14px; overflow:hidden;
+    flex:0 0 300px; scroll-snap-align:start;
+    opacity:0; transform:translateY(30px);
+    transition:opacity .6s ease, transform .6s ease, border-color .3s ease;
+  }
+  .card:hover{ border-color:rgba(255,255,255,.22); }
+  .card.reveal{opacity:1; transform:translateY(0);}
+  .card .thumb{ width:100%; aspect-ratio:4/3; object-fit:cover; display:block; background:#0e1626; }
+  .card .body{ padding:22px 22px 26px; }
+  .card .hp{font-family:var(--font-display); font-size:13px; color:var(--accent2); letter-spacing:.06em;}
+  .card h3{color:#fff; font-size:20px; margin:8px 0 8px;}
+  .card p{font-size:13.5px; line-height:1.6;}
+  .slider-nav{ display:flex; justify-content:center; gap:10px; margin-top:6px; }
+  .slider-nav button{
+    width:38px; height:38px; border-radius:50%; cursor:pointer;
+    background:transparent; color:#fff; font-size:16px;
+    border:1px solid rgba(255,255,255,.18);
+  }
+  .slider-nav button:hover{ border-color:var(--accent2); color:var(--accent2); }
+
+  footer{
+    position:relative; z-index:2; background:#080d17; border-top:1px solid rgba(255,255,255,.07);
+    padding:70px 8% 40px; font-size:13px;
+  }
+  footer .foot-grid{
+    display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:40px; max-width:1200px; margin:0 auto 50px;
+  }
+  footer h4{font-family:var(--font-display); color:#fff; font-size:13px; letter-spacing:.06em; margin-bottom:16px; text-transform:uppercase;}
+  footer p, footer li{color:rgba(255,255,255,.5); line-height:1.8;}
+  footer ul{list-style:none;}
+  footer .foot-bottom{
+    max-width:1200px; margin:0 auto; padding-top:28px; border-top:1px solid rgba(255,255,255,.07);
+    display:flex; justify-content:space-between; color:rgba(255,255,255,.35); font-size:12px; flex-wrap:wrap; gap:10px;
+  }
+  footer .social{display:flex; gap:16px;}
+
+  @media (max-width:820px){
+    .beat{ max-width:88%; padding:0 24px; }
+    #beat-2, #beat-3, #beat-4{ left:6%; right:6%; text-align:left; }
+    #beat-3{ text-align:left; }
+    #beat-3 ul li{padding-left:22px; padding-right:0;}
+    #beat-3 ul li::before{left:0; right:auto;}
+    footer .foot-grid{grid-template-columns:1fr;}
+    #navbar nav{display:none;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .beat{transition:none;}
+    .card{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header id="navbar">
+  <div class="logo">AGRI <span>TRACKING</span></div>
+  <nav>
+    <a href="#gamma">Gamma</a>
+    <a href="#conformita">Conformità</a>
+    <a href="#rete">Rete</a>
+    <a href="#contatti">Contatti</a>
+  </nav>
+  <a class="nav-cta" href="#contatti">Richiedi info</a>
+</header>
+
+<section id="stage">
+  <div class="sticky">
+    <canvas id="reveal-canvas"></canvas>
+    <div id="vignette"></div>
+    <div id="grain"></div>
+
+    <div id="loader">
+      <div class="pct">0%</div>
+      <div class="bar"><i></i></div>
+    </div>
+
+    <div class="beat" id="beat-hero">
+      <div class="eyebrow">Agri Tracking · Weifang, Cina</div>
+      <h1 class="grad-text">AGRI TRACKING</h1>
+      <div class="sub">Leaders Drive</div>
+      <div class="line">Trattori agricoli 20–300 HP · dalla progettazione alla consegna in campo</div>
+    </div>
+
+    <div class="beat" id="beat-2">
+      <div class="eyebrow">Ingegneria</div>
+      <h2>Ogni componente,<br>verificato</h2>
+      <p>Dalla fusione del blocco motore alla frizione a doppio disco in ceramica speciale: ogni trattore esce dalla linea con controlli qualità documentati e certificazione ISO 9001 sull'intero processo produttivo.</p>
+    </div>
+
+    <div class="beat" id="beat-3">
+      <div class="eyebrow">Conformità</div>
+      <h2>Zero sorprese<br>in dogana</h2>
+      <ul>
+        <li>Omologazione UE verificata prima della spedizione</li>
+        <li>Motori con certificazione emissioni allineata agli standard correnti</li>
+        <li>Documentazione tecnica completa e tracciabile per ogni lotto</li>
+      </ul>
+    </div>
+
+    <div class="beat" id="beat-4">
+      <div class="eyebrow">Rete</div>
+      <h2>Assistenza<br>vicino a te</h2>
+      <p>Una rete internazionale di centri assistenza e ricambi autorizzati, con scorte dedicate e tecnici formati direttamente dal produttore, per ridurre al minimo i fermi macchina.</p>
+    </div>
+
+    <div class="beat" id="beat-cta">
+      <div class="eyebrow">Prossimo passo</div>
+      <h2 class="grad-text">Parliamo del tuo<br>prossimo trattore</h2>
+      <div class="ctas">
+        <button class="btn btn-primary" onclick="document.getElementById('contatti').scrollIntoView({behavior:'smooth'})">Richiedi una consulenza</button>
+        <button class="btn btn-secondary">Scarica il catalogo</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content" id="gamma">
+  <div class="section-head">
+    <div class="eyebrow">Gamma</div>
+    <h2>Sei serie, una filosofia</h2>
+    <p>Dalla piccola azienda agricola al lavoro pesante in cantiere: una gamma completa progettata per coprire ogni fascia di potenza.</p>
+  </div>
+  <div class="slider-wrap">
+    <div class="slider" id="gamma-slider">
+      <div class="card"><img class="thumb" src="tractor-small.jpg" alt="Trattore compatto serie TE"><div class="body"><div class="hp">25–60 HP</div><h3>Serie TE</h3><p>Compatti e maneggevoli, pensati per orti, frutteti e piccole aziende agricole.</p></div></div>
+      <div class="card"><img class="thumb" src="tractor-small.jpg" alt="Trattore serie TB"><div class="body"><div class="hp">50–90 HP</div><h3>Serie TB</h3><p>Il punto di equilibrio tra potenza e agilità per l'azienda agricola media.</p></div></div>
+      <div class="card"><img class="thumb" src="tractor-mid.jpg" alt="Trattore serie TD"><div class="body"><div class="hp">90–130 HP</div><h3>Serie TD</h3><p>Cambio 16+8, cabina insonorizzata, per lavorazioni intensive su grandi superfici.</p></div></div>
+      <div class="card"><img class="thumb" src="tractor-mid.jpg" alt="Trattore serie TF"><div class="body"><div class="hp">130–180 HP</div><h3>Serie TF</h3><p>Motori 6 cilindri, elevata capacità di traino per attrezzature pesanti.</p></div></div>
+      <div class="card"><img class="thumb" src="tractor-large.jpg" alt="Trattore serie TC"><div class="body"><div class="hp">150–220 HP</div><h3>Serie TC</h3><p>Sospensione anteriore e cabina premium per le operazioni più impegnative.</p></div></div>
+      <div class="card"><img class="thumb" src="tractor-large.jpg" alt="Trattore serie TS"><div class="body"><div class="hp">180–300 HP</div><h3>Serie TS</h3><p>Il vertice della gamma: frizione Luk, assale Carraro, sollevatore Bosch Rexroth.</p></div></div>
+    </div>
+    <div class="slider-nav">
+      <button id="slider-prev" aria-label="Precedente">←</button>
+      <button id="slider-next" aria-label="Successivo">→</button>
+    </div>
+  </div>
+</section>
+
+<footer id="contatti">
+  <div class="foot-grid">
+    <div>
+      <h4>Agri Tracking</h4>
+      <p>Weifang Yinquan Machinery Co., Ltd.<br>
+      Zona A, Intelligent Equipment Industrial Park,<br>
+      Fangzi District, Weifang, Shandong, Cina</p>
+    </div>
+    <div>
+      <h4>Orari</h4>
+      <p>Lun–Ven: 9:00–18:00 (CET)<br>Sab: su appuntamento</p>
+    </div>
+    <div>
+      <h4>Contatti</h4>
+      <p>info@agritracking.example<br>+86 536 752 3588</p>
+      <div class="social">
+        <a href="#">LinkedIn</a><a href="#">YouTube</a><a href="#">WhatsApp</a>
+      </div>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© <span id="year"></span> Agri Tracking — Weifang Yinquan Machinery Co., Ltd.</span>
+    <span>Sito dimostrativo — dati di contatto da confermare</span>
+  </div>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ============ CONFIG ============ */
+// Video singolo e continuo (sostituisce le 4 clip separate: l'API non permette
+// di incatenare video->video, quindi un solo shot continuo evita i salti di
+// coerenza tra segmenti che si notavano prima).
+const SINGLE_VIDEO_URL = "clip-full.mp4";
+const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ============ NAVBAR + PROGRESS ============ */
+const navbar = document.getElementById('navbar');
+const progressBar = document.getElementById('progress');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('visible', window.scrollY > 60);
+  const doc = document.documentElement;
+  const scrollPct = (doc.scrollTop) / (doc.scrollHeight - doc.clientHeight) * 100;
+  progressBar.style.width = scrollPct + '%';
+}, {passive:true});
+
+/* ============ REVEAL ON SCROLL (cards) ============ */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('reveal'); });
+}, {threshold:.2});
+document.querySelectorAll('.card').forEach(c => io.observe(c));
+
+/* ============ GAMMA SLIDER ============ */
+const gammaSlider = document.getElementById('gamma-slider');
+if(gammaSlider){
+  const cardWidth = () => gammaSlider.querySelector('.card').getBoundingClientRect().width + 20;
+  document.getElementById('slider-prev').addEventListener('click', () => {
+    gammaSlider.scrollBy({left: -cardWidth(), behavior:'smooth'});
+  });
+  document.getElementById('slider-next').addEventListener('click', () => {
+    gammaSlider.scrollBy({left: cardWidth(), behavior:'smooth'});
+  });
+}
+
+/* ============ CANVAS ENGINE ============ */
+const canvas = document.getElementById('reveal-canvas');
+const ctx = canvas.getContext('2d');
+const stage = document.getElementById('stage');
+const loader = document.getElementById('loader');
+const loaderPct = loader.querySelector('.pct');
+const loaderBar = loader.querySelector('.bar i');
+
+let dpr = Math.min(window.devicePixelRatio || 1, 2);
+function resizeCanvas(){
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = window.innerWidth * dpr;
+  canvas.height = window.innerHeight * dpr;
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+const FRAME_MANIFEST = window.FRAME_MANIFEST || null;
+let engineMode = 'none'; // 'frames' | 'video' | 'static'
+
+function drawCover(source, sw, sh){
+  if(!sw || !sh) return;
+  const cw = canvas.width, ch = canvas.height;
+  const scale = Math.max(cw/sw, ch/sh);
+  const dw = sw*scale, dh = sh*scale;
+  const dx = (cw-dw)/2, dy = (ch-dh)/2;
+  ctx.drawImage(source, dx, dy, dw, dh);
+}
+
+function setLoaderProgress(p){
+  const pct = Math.round(p*100);
+  loaderPct.textContent = pct + '%';
+  loaderBar.style.width = pct + '%';
+  if(pct >= 100){
+    loader.style.opacity = '0';
+    setTimeout(()=> loader.style.display='none', 650);
+  }
+}
+
+/* ---- Mode A: pre-extracted frame sequence (when manifest.js is real) ---- */
+function initFrameEngine(){
+  engineMode = 'frames';
+  const count = FRAME_MANIFEST.count;
+  const pattern = FRAME_MANIFEST.pattern;
+  const images = new Array(count).fill(null);
+  let loaded = 0;
+
+  function loadFrame(i){
+    if(images[i]) return;
+    const img = new Image();
+    img.onload = () => { images[i] = img; loaded++; setLoaderProgress(loaded/count); };
+    img.onerror = () => { loaded++; setLoaderProgress(loaded/count); };
+    img.src = pattern.replace('%04d', String(i+1).padStart(4,'0'));
+    images[i] = 'loading';
+  }
+  // coarse pass first (every 5th), then fill in
+  for(let i=0;i<count;i+=5) loadFrame(i);
+  setTimeout(()=>{ for(let i=0;i<count;i++) loadFrame(i); }, 50);
+
+  function nearestLoaded(target){
+    for(let d=0; d<count; d++){
+      const a = target-d, b = target+d;
+      if(a>=0 && images[a] && images[a]!=='loading') return images[a];
+      if(b<count && images[b] && images[b]!=='loading') return images[b];
+    }
+    return null;
+  }
+
+  let shown = 0, targetF = 0;
+  function getScrollProgress(){
+    const rect = stage.getBoundingClientRect();
+    const total = stage.offsetHeight - window.innerHeight;
+    const p = -rect.top / total;
+    return Math.min(1, Math.max(0, p));
+  }
+  function tick(){
+    targetF = getScrollProgress() * (count-1);
+    shown = REDUCED_MOTION ? targetF : shown + (targetF-shown)*0.2;
+    const idx = Math.round(shown);
+    const frame = nearestLoaded(idx);
+    if(frame) drawCover(frame, frame.naturalWidth, frame.naturalHeight);
+    requestAnimationFrame(tick);
+  }
+  tick();
+}
+
+/* ---- Mode B: single continuous hosted video, pre-extracted client-side
+   into bitmaps. Seeking a <video> element live, on every scroll tick, is
+   never perfectly smooth (each currentTime write triggers a decode with
+   variable latency). Instead we sweep through the clip ONCE during the
+   loader phase, capturing evenly-spaced frames into ImageBitmaps held in
+   memory, then scrub reads directly from that array — zero-latency, same
+   behaviour as a real pre-rendered frame sequence, and since it's one
+   continuous shot (not 4 separate generations) there are no visual jumps
+   between segments. */
+const FRAMES_TO_EXTRACT = 128;
+
+function seekTo(video, t){
+  return new Promise(resolve => {
+    const done = () => { video.removeEventListener('seeked', done); resolve(); };
+    video.addEventListener('seeked', done);
+    video.currentTime = t;
+    setTimeout(done, 700); // safety timeout if 'seeked' never fires
+  });
+}
+
+async function initVideoEngine(url){
+  if(typeof createImageBitmap !== 'function'){
+    return initVideoEngineLiveSeek(url); // older-browser fallback
+  }
+  engineMode = 'video-prextract';
+
+  const v = document.createElement('video');
+  v.src = url; v.muted = true; v.playsInline = true; v.preload = 'auto'; v.crossOrigin = 'anonymous';
+  v.style.display = 'none';
+  document.body.appendChild(v);
+  await new Promise(res => {
+    v.addEventListener('loadedmetadata', res, {once:true});
+    v.addEventListener('error', res, {once:true});
+  });
+
+  const duration = v.duration || 15;
+  const frames = [];
+  for(let i=0;i<FRAMES_TO_EXTRACT;i++){
+    const t = Math.min(duration - 0.03, (i/(FRAMES_TO_EXTRACT-1)) * duration);
+    await seekTo(v, t);
+    let bmp = null;
+    try{ bmp = await createImageBitmap(v); } catch(e){}
+    frames.push(bmp);
+    setLoaderProgress((i+1)/FRAMES_TO_EXTRACT);
+  }
+  v.remove();
+
+  const count = frames.length;
+  let shown = 0, targetF = 0;
+  function getScrollProgress(){
+    const rect = stage.getBoundingClientRect();
+    const total = stage.offsetHeight - window.innerHeight;
+    return Math.min(1, Math.max(0, -rect.top / total));
+  }
+  function nearest(target){
+    for(let d=0; d<count; d++){
+      const a=target-d, b=target+d;
+      if(a>=0 && frames[a]) return frames[a];
+      if(b<count && frames[b]) return frames[b];
+    }
+    return null;
+  }
+  function tick(){
+    targetF = getScrollProgress() * (count-1);
+    shown = REDUCED_MOTION ? targetF : shown + (targetF-shown)*0.2;
+    const bmp = nearest(Math.round(shown));
+    if(bmp) drawCover(bmp, bmp.width, bmp.height);
+    requestAnimationFrame(tick);
+  }
+  tick();
+}
+
+/* ---- Mode B fallback: live seek (older browsers without createImageBitmap) ---- */
+function initVideoEngineLiveSeek(url){
+  engineMode = 'video-liveseek';
+  const v = document.createElement('video');
+  v.src = url; v.muted = true; v.playsInline = true; v.preload = 'auto';
+  v.style.display = 'none';
+  document.body.appendChild(v);
+  v.addEventListener('loadeddata', () => setLoaderProgress(1), {once:true});
+  v.addEventListener('error', () => setLoaderProgress(1), {once:true});
+  v.load();
+
+  let shown = 0;
+  function getScrollProgress(){
+    const rect = stage.getBoundingClientRect();
+    const total = stage.offsetHeight - window.innerHeight;
+    return Math.min(1, Math.max(0, -rect.top/total));
+  }
+  function tick(){
+    const target = getScrollProgress();
+    shown = REDUCED_MOTION ? target : shown + (target-shown)*0.2;
+    if(v.readyState>=1 && v.duration){
+      const t = shown*v.duration;
+      if(Math.abs(v.currentTime-t) > 0.03) v.currentTime = t;
+      if(v.readyState>=2) drawCover(v, v.videoWidth, v.videoHeight);
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+}
+
+/* ---- Mode C: static fallback ---- */
+function initStaticEngine(){
+  engineMode = 'static';
+  const img = new Image();
+  img.onload = () => { drawCover(img, img.naturalWidth, img.naturalHeight); setLoaderProgress(1); };
+  img.onerror = () => setLoaderProgress(1);
+  img.src = 'assets/master-hero.png';
+  window.addEventListener('scroll', () => drawCover(img, img.naturalWidth, img.naturalHeight), {passive:true});
+}
+
+/* ---- Boot ---- */
+if(FRAME_MANIFEST && FRAME_MANIFEST.count > 0){
+  initFrameEngine();
+} else if(SINGLE_VIDEO_URL){
+  initVideoEngine(SINGLE_VIDEO_URL);
+} else {
+  initStaticEngine();
+}
+
+/* ============ BEAT MAPPING (0-15 / 15-40 / 40-65 / 65-85 / 85-100) ============ */
+const beats = [
+  {el: document.getElementById('beat-hero'), from:0,   to:.15},
+  {el: document.getElementById('beat-2'),    from:.15, to:.40},
+  {el: document.getElementById('beat-3'),    from:.40, to:.65},
+  {el: document.getElementById('beat-4'),    from:.65, to:.85},
+  {el: document.getElementById('beat-cta'),  from:.85, to:1.0},
+];
+function updateBeats(){
+  const rect = stage.getBoundingClientRect();
+  const total = stage.offsetHeight - window.innerHeight;
+  const p = Math.min(1, Math.max(0, -rect.top / total));
+  beats.forEach(b => b.el.classList.toggle('active', p >= b.from && p < b.to || (b.to===1 && p>=b.from)));
+  requestAnimationFrame(updateBeats);
+}
+updateBeats();
+</script>
+</body>
+</html>
+                                                 
