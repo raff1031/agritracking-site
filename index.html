@@ -205,6 +205,51 @@
   .card .price strong.price-reveal.revealed{
     cursor:default; text-decoration:none;
   }
+  .card .details-cta{
+    margin-top:14px; padding-top:14px; border-top:1px solid rgba(255,255,255,.08);
+  }
+  .card .details-btn{
+    font-family:var(--font-display); font-size:13.5px; font-weight:600; color:var(--accent2);
+    background:none; border:none; cursor:pointer; padding:0; text-decoration:underline dashed rgba(62,166,255,.4);
+    text-underline-offset:4px;
+  }
+  .card .details-btn:hover{ color:#fff; }
+
+  /* ---------- MODAL (allestimenti) ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; z-index:300;
+    background:rgba(4,7,14,.78); backdrop-filter:blur(6px);
+    display:flex; align-items:center; justify-content:center; padding:24px;
+    opacity:0; pointer-events:none; transition:opacity .25s ease;
+  }
+  .modal-overlay.open{ opacity:1; pointer-events:auto; }
+  .modal-box{
+    position:relative; width:100%; max-width:640px; max-height:84vh; overflow-y:auto;
+    background:#0e1729; border:1px solid rgba(255,255,255,.1); border-radius:16px;
+    padding:38px 34px 30px;
+  }
+  .modal-close{
+    position:absolute; top:16px; right:16px; width:34px; height:34px; border-radius:50%;
+    background:transparent; border:1px solid rgba(255,255,255,.18); color:#fff; font-size:16px; cursor:pointer;
+  }
+  .modal-close:hover{ border-color:var(--accent2); color:var(--accent2); }
+  .modal-panel{ display:none; }
+  .modal-panel.active{ display:block; }
+  .modal-panel .modal-eyebrow{
+    font-family:var(--font-display); font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--accent2);
+  }
+  .modal-panel h3{ color:#fff; font-size:24px; margin-top:10px; margin-bottom:22px; }
+  .variant{ padding-top:18px; margin-top:18px; border-top:1px solid rgba(255,255,255,.08); }
+  .variant:first-of-type{ padding-top:0; margin-top:0; border-top:none; }
+  .variant h4{ font-family:var(--font-display); color:#fff; font-size:15.5px; margin-bottom:8px; }
+  .variant p{ font-size:13.5px; line-height:1.65; color:rgba(255,255,255,.62); }
+  .variant .price{
+    margin-top:12px; padding-top:12px; border-top:1px dashed rgba(255,255,255,.08);
+    font-size:13.5px; color:rgba(255,255,255,.55);
+  }
+  .variant .price strong{
+    display:block; font-family:var(--font-display); font-size:18px; color:#fff; margin-bottom:2px;
+  }
   .slider-nav{ display:flex; justify-content:center; gap:10px; margin-top:6px; }
   .slider-nav button{
     width:38px; height:38px; border-radius:50%; cursor:pointer;
@@ -319,14 +364,14 @@
   </div>
   <div class="slider-wrap">
     <div class="slider" id="gamma-slider">
-      <div class="card"><img class="thumb" src="tractor-small.jpg" alt="Trattore TE254"><div class="body"><div class="hp">25 HP</div><h3>TE254</h3><p>Motore Laidong Stage V, cambio TE 8+8, PTO 540/1000 a 6 innesti, sedile Grammer, sollevatore a pressione forzata.</p><div class="price"><strong class="price-reveal" data-price="11.500">Su richiesta</strong>Consegna 35 giorni</div></div></div>
-      <div class="card"><img class="thumb" src="tractor-small.jpg" alt="Trattore TE404"><div class="body"><div class="hp">40 HP</div><h3>TE404</h3><p>Motore Laidong Stage V, frizione Runcheng 9", cambio TE 8F+8R sincronizzato, doppia uscita idraulica, serbatoio ausiliario.</p><div class="price"><strong class="price-reveal" data-price="13.700">Su richiesta</strong>Consegna 35 giorni</div></div></div>
-      <div class="card"><img class="thumb" src="tractor-small.jpg" alt="Trattore TE504"><div class="body"><div class="hp">50 HP</div><h3>TE504</h3><p>Motore Laidong Stage V 4 cilindri, cabina climatizzata Platinum, freni pneumatici a doppia linea, volante regolabile.</p><div class="price"><strong class="price-reveal" data-price="14.200">Su richiesta</strong>Consegna 35 giorni</div></div></div>
-      <div class="card"><img class="thumb" src="tractor-mid.jpg" alt="Trattore TD904"><div class="body"><div class="hp">90 HP</div><h3>TD904</h3><p>Motore YTO Stage V 4 cilindri, frizione 12", cambio TF 16+8 navetta, assale anteriore Guhe, PTO 540/1000.</p><div class="price"><strong class="price-reveal" data-price="26.900">Su richiesta</strong>Consegna 35 giorni</div></div></div>
-      <div class="card"><img class="thumb" src="tractor-mid.jpg" alt="Trattore TD1004"><div class="body"><div class="hp">100 HP</div><h3>TD1004</h3><p>Motore YTO Stage V 4 cilindri, cambio TF 16+8, carreggiata regolabile, cabina Platinum climatizzata, camera 360°.</p><div class="price"><strong class="price-reveal" data-price="27.300">Su richiesta</strong>Consegna 35 giorni</div></div></div>
-      <div class="card"><img class="thumb" src="tractor-mid.jpg" alt="Trattore TD1154"><div class="body"><div class="hp">115 HP</div><h3>TD1154</h3><p>Motore Yuchai Stage V 4 cilindri, frizione 14" a doppio effetto, tre gruppi di uscite idrauliche, freno di stazionamento.</p><div class="price"><strong class="price-reveal" data-price="28.900">Su richiesta</strong>Consegna 35 giorni</div></div></div>
-      <div class="card"><img class="thumb" src="tractor-large.jpg" alt="Trattore TD1204"><div class="body"><div class="hp">120 HP</div><h3>TD1204</h3><p>Motore Yuchai Stage V 4 cilindri, carreggiata a variazione continua, camera 360°, tergicristallo posteriore, martello di sicurezza.</p><div class="price"><strong class="price-reveal" data-price="29.300">Su richiesta</strong>Consegna 35 giorni</div></div></div>
-      <div class="card"><img class="thumb" src="tractor-large.jpg" alt="Trattore TD1254"><div class="body"><div class="hp">125 HP</div><h3>TD1254</h3><p>Top di gamma classe TD: motore Yuchai Stage V 4 cilindri, stessa piattaforma TF 16+8, contrappesi maggiorati anteriori e posteriori.</p><div class="price"><strong class="price-reveal" data-price="30.100">Su richiesta</strong>Consegna 35 giorni</div></div></div>
+      <div class="card"><img class="thumb" src="tractor-small.jpg" alt="Trattore TE254"><div class="body"><div class="hp">25 HP</div><h3>TE254</h3><p>Motore Laidong Stage V, cambio TE 8+8, PTO 540/1000 a 6 innesti, sedile Grammer, sollevatore a pressione forzata.</p><div class="details-cta"><button class="details-btn" data-model="TE254">Vedi allestimenti e prezzo</button></div></div></div>
+      <div class="card"><img class="thumb" src="tractor-small.jpg" alt="Trattore TE404"><div class="body"><div class="hp">40 HP</div><h3>TE404</h3><p>Motore Laidong Stage V, frizione Runcheng 9", cambio TE 8F+8R sincronizzato, doppia uscita idraulica, serbatoio ausiliario.</p><div class="details-cta"><button class="details-btn" data-model="TE404">Vedi allestimenti e prezzo</button></div></div></div>
+      <div class="card"><img class="thumb" src="tractor-small.jpg" alt="Trattore TE504"><div class="body"><div class="hp">50 HP</div><h3>TE504</h3><p>Motore Laidong Stage V 4 cilindri, cabina climatizzata Platinum, freni pneumatici a doppia linea, volante regolabile.</p><div class="details-cta"><button class="details-btn" data-model="TE504">Vedi allestimenti e prezzo</button></div></div></div>
+      <div class="card"><img class="thumb" src="tractor-mid.jpg" alt="Trattore TD904"><div class="body"><div class="hp">90 HP</div><h3>TD904</h3><p>Motore YTO Stage V 4 cilindri, frizione 12", cambio TF 16+8 navetta, assale anteriore Guhe, PTO 540/1000.</p><div class="details-cta"><button class="details-btn" data-model="TD904">Vedi allestimento e prezzo</button></div></div></div>
+      <div class="card"><img class="thumb" src="tractor-mid.jpg" alt="Trattore TD1004"><div class="body"><div class="hp">100 HP</div><h3>TD1004</h3><p>Motore YTO Stage V 4 cilindri, cambio TF 16+8, carreggiata regolabile, cabina Platinum climatizzata, camera 360°.</p><div class="details-cta"><button class="details-btn" data-model="TD1004">Vedi allestimento e prezzo</button></div></div></div>
+      <div class="card"><img class="thumb" src="tractor-mid.jpg" alt="Trattore TD1154"><div class="body"><div class="hp">115 HP</div><h3>TD1154</h3><p>Motore Yuchai Stage V 4 cilindri, frizione 14" a doppio effetto, tre gruppi di uscite idrauliche, freno di stazionamento.</p><div class="details-cta"><button class="details-btn" data-model="TD1154">Vedi allestimento e prezzo</button></div></div></div>
+      <div class="card"><img class="thumb" src="tractor-large.jpg" alt="Trattore TD1204"><div class="body"><div class="hp">120 HP</div><h3>TD1204</h3><p>Motore Yuchai Stage V 4 cilindri, carreggiata a variazione continua, camera 360°, tergicristallo posteriore, martello di sicurezza.</p><div class="details-cta"><button class="details-btn" data-model="TD1204">Vedi allestimento e prezzo</button></div></div></div>
+      <div class="card"><img class="thumb" src="tractor-large.jpg" alt="Trattore TD1254"><div class="body"><div class="hp">125 HP</div><h3>TD1254</h3><p>Top di gamma classe TD: motore Yuchai Stage V 4 cilindri, stessa piattaforma TF 16+8, contrappesi maggiorati anteriori e posteriori.</p><div class="details-cta"><button class="details-btn" data-model="TD1254">Vedi allestimento e prezzo</button></div></div></div>
       <div class="card" style="border-style:dashed; opacity:.7"><div class="body" style="padding-top:26px"><div class="hp">130–260 HP</div><h3>Prossimamente</h3><p>Gamma Stage V da 130 a 260 HP attualmente in sviluppo, ciclo stimato circa 70 giorni. Contattaci per essere aggiornato sul lancio.</p></div></div>
     </div>
     <div class="slider-nav">
@@ -362,6 +407,118 @@
   </div>
 </footer>
 
+<div class="modal-overlay" id="model-modal" aria-hidden="true">
+  <div class="modal-box">
+    <button class="modal-close" id="modal-close-btn" aria-label="Chiudi">×</button>
+
+    <div class="modal-panel" id="modal-TE254">
+      <div class="modal-eyebrow">25 HP</div>
+      <h3>TE254 — Allestimenti disponibili</h3>
+      <div class="variant">
+        <h4>Versione Base</h4>
+        <p>Arco di sicurezza con tettuccio parasole, cambio TE 8+8, sollevatore a pressione forzata, PTO 540/1000 a 6 innesti, due uscite idrauliche, sedile Grammer, contrappeso posteriore 31×2, gancio di traino oscillante.</p>
+        <div class="price"><strong class="price-reveal" data-price="10.800">Su richiesta</strong>Consegna 35 giorni</div>
+      </div>
+      <div class="variant">
+        <h4>Versione Standard</h4>
+        <p>Come la versione Base, con parafanghi anteriori e pneumatici radiali maggiorati 260/70R16 (anteriori) e 320/85R24 (posteriori).</p>
+        <div class="price"><strong class="price-reveal" data-price="11.500">Su richiesta</strong>Consegna 35 giorni</div>
+      </div>
+      <div class="variant">
+        <h4>Versione Cabinata</h4>
+        <p>Cabina riscaldata al posto dell'arco di sicurezza, parafanghi anteriori, pneumatici radiali 260/70R16 + 320/85R24; resto della dotazione invariato.</p>
+        <div class="price"><strong class="price-reveal" data-price="12.000">Su richiesta</strong>Consegna 35 giorni</div>
+      </div>
+    </div>
+
+    <div class="modal-panel" id="modal-TE404">
+      <div class="modal-eyebrow">40 HP</div>
+      <h3>TE404 — Allestimenti disponibili</h3>
+      <div class="variant">
+        <h4>Versione Base</h4>
+        <p>Arco di sicurezza con tettuccio parasole, frizione Runcheng 9", assale anteriore Guhe 1300mm, cambio TE 8F+8R sincronizzato, serbatoio ausiliario idraulico, pneumatici radiali 260/70R16 + 320/85R24, batteria 80A.</p>
+        <div class="price"><strong class="price-reveal" data-price="12.800">Su richiesta</strong>Consegna 35 giorni</div>
+      </div>
+      <div class="variant">
+        <h4>Versione Cabinata Riscaldata</h4>
+        <p>Cabina nuova con riscaldamento al posto dell'arco di sicurezza; resto della dotazione identico alla Base.</p>
+        <div class="price"><strong class="price-reveal" data-price="14.000">Su richiesta</strong>Consegna 35 giorni</div>
+      </div>
+      <div class="variant">
+        <h4>Versione Cabinata Climatizzata</h4>
+        <p>Cabina nuova con aria condizionata al posto dell'arco di sicurezza; resto della dotazione identico alla Base.</p>
+        <div class="price"><strong class="price-reveal" data-price="14.200">Su richiesta</strong>Consegna 35 giorni</div>
+      </div>
+    </div>
+
+    <div class="modal-panel" id="modal-TE504">
+      <div class="modal-eyebrow">50 HP</div>
+      <h3>TE504 — Allestimenti disponibili</h3>
+      <div class="variant">
+        <h4>Versione Base</h4>
+        <p>Arco di sicurezza con tettuccio parasole, assale anteriore Guhe 1200mm, cambio TE 8+8 sincronizzato, freni pneumatici a doppio circuito, volante regolabile, sedile Grammer, due uscite idrauliche.</p>
+        <div class="price"><strong class="price-reveal" data-price="13.700">Su richiesta</strong>Consegna 35 giorni</div>
+      </div>
+      <div class="variant">
+        <h4>Versione Cabinata Platinum</h4>
+        <p>Cabina climatizzata Platinum con sedile Grammer e braccioli al posto dell'arco di sicurezza, assale anteriore Guhe maggiorato a 1300mm; resto della dotazione identico alla Base.</p>
+        <div class="price"><strong class="price-reveal" data-price="14.600">Su richiesta</strong>Consegna 35 giorni</div>
+      </div>
+    </div>
+
+    <div class="modal-panel" id="modal-TD904">
+      <div class="modal-eyebrow">90 HP</div>
+      <h3>TD904 — Configurazione</h3>
+      <div class="variant">
+        <h4>Configurazione unica</h4>
+        <p>Motore YTO Stage V 4 cilindri, frizione 12" a doppio effetto, cambio TF 16+8 navetta, assale anteriore Guhe, cabina Platinum climatizzata, camera 360°, tre uscite idrauliche, pneumatici radiali 340/85R24 + 420/85R34.</p>
+        <div class="price"><strong class="price-reveal" data-price="26.900">Su richiesta</strong>Consegna 35 giorni</div>
+      </div>
+    </div>
+
+    <div class="modal-panel" id="modal-TD1004">
+      <div class="modal-eyebrow">100 HP</div>
+      <h3>TD1004 — Configurazione</h3>
+      <div class="variant">
+        <h4>Configurazione unica</h4>
+        <p>Motore YTO Stage V 4 cilindri, frizione 12", cambio TF 16+8, carreggiata regolabile, cabina Platinum climatizzata, camera 360°, tre uscite idrauliche, pneumatici radiali 340/85R24 + 420/85R34.</p>
+        <div class="price"><strong class="price-reveal" data-price="27.300">Su richiesta</strong>Consegna 35 giorni</div>
+      </div>
+    </div>
+
+    <div class="modal-panel" id="modal-TD1154">
+      <div class="modal-eyebrow">115 HP</div>
+      <h3>TD1154 — Configurazione</h3>
+      <div class="variant">
+        <h4>Configurazione unica</h4>
+        <p>Motore Yuchai Stage V 4 cilindri, frizione 14" a doppio effetto, cambio TF 16+8, cabina Platinum climatizzata, camera 360°, tre uscite idrauliche, freno di stazionamento, pneumatici radiali 340/85R24 + 420/85R34.</p>
+        <div class="price"><strong class="price-reveal" data-price="28.900">Su richiesta</strong>Consegna 35 giorni</div>
+      </div>
+    </div>
+
+    <div class="modal-panel" id="modal-TD1204">
+      <div class="modal-eyebrow">120 HP</div>
+      <h3>TD1204 — Configurazione</h3>
+      <div class="variant">
+        <h4>Configurazione unica</h4>
+        <p>Motore Yuchai Stage V 4 cilindri, frizione 14" a doppio effetto, carreggiata a variazione continua, cabina Platinum climatizzata, camera 360°, tergicristallo posteriore, martello di sicurezza, contrappesi maggiorati (44×10 anteriore, 43×8 posteriore).</p>
+        <div class="price"><strong class="price-reveal" data-price="29.300">Su richiesta</strong>Consegna 35 giorni</div>
+      </div>
+    </div>
+
+    <div class="modal-panel" id="modal-TD1254">
+      <div class="modal-eyebrow">125 HP</div>
+      <h3>TD1254 — Configurazione</h3>
+      <div class="variant">
+        <h4>Configurazione unica</h4>
+        <p>Motore Yuchai Stage V 4 cilindri, stessa piattaforma TF 16+8, cabina Platinum climatizzata, camera 360°, contrappesi maggiorati anteriori e posteriori (44×10 / 43×8), top di gamma della classe TD.</p>
+        <div class="price"><strong class="price-reveal" data-price="30.100">Su richiesta</strong>Consegna 35 giorni</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -387,6 +544,25 @@ const io = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('reveal'); });
 }, {threshold:.2});
 document.querySelectorAll('.card').forEach(c => io.observe(c));
+
+/* ============ MODAL ALLESTIMENTI ============ */
+const modelModal = document.getElementById('model-modal');
+const modalCloseBtn = document.getElementById('modal-close-btn');
+function openModel(model){
+  document.querySelectorAll('.modal-panel').forEach(p => p.classList.toggle('active', p.id === 'modal-' + model));
+  modelModal.classList.add('open');
+  modelModal.setAttribute('aria-hidden', 'false');
+}
+function closeModel(){
+  modelModal.classList.remove('open');
+  modelModal.setAttribute('aria-hidden', 'true');
+}
+document.querySelectorAll('.details-btn').forEach(btn => {
+  btn.addEventListener('click', () => openModel(btn.dataset.model));
+});
+modalCloseBtn.addEventListener('click', closeModel);
+modelModal.addEventListener('click', (e) => { if(e.target === modelModal) closeModel(); });
+document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModel(); });
 
 /* ============ PREZZI SU RICHIESTA (password) ============ */
 const PRICE_PASSWORD = 'AgriCina';
