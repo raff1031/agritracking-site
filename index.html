@@ -10,6 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
 <script src="assets/frames/manifest.js" onerror="window.FRAME_MANIFEST=null"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 
 <style>
   :root{
@@ -258,37 +259,36 @@
   }
   .slider-nav button:hover{ border-color:var(--accent2); color:var(--accent2); }
 
-  /* ---------- DETTAGLI (esplora cabina/motore) ---------- */
-  .detail-viewer{ max-width:1100px; margin:0 auto; }
-  .detail-tabs{ display:flex; justify-content:center; gap:12px; margin-bottom:34px; flex-wrap:wrap; }
-  .detail-tab{
-    font-family:var(--font-display); font-size:13.5px; font-weight:600; padding:10px 22px; border-radius:999px;
-    cursor:pointer; color:rgba(255,255,255,.55); background:transparent; border:1px solid rgba(255,255,255,.14);
-    transition:color .25s ease, border-color .25s ease, background .25s ease;
-  }
-  .detail-tab:hover{ color:#fff; border-color:rgba(255,255,255,.3); }
-  .detail-tab.active{ color:#0b1220; background:var(--grad); border-color:transparent; }
-  .detail-stage{ display:grid; grid-template-columns:1.15fr 1fr; gap:36px; align-items:start; }
-  .detail-image-wrap{
+  /* ---------- DETTAGLI (showcase 3D) ---------- */
+  .model3d-wrap{ display:grid; grid-template-columns:1.3fr 1fr; gap:32px; max-width:1100px; margin:0 auto; align-items:stretch; }
+  .model3d-stage{
     position:relative; border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,.1);
-    background:#0e1626; aspect-ratio:4/3;
+    aspect-ratio:4/3; background:radial-gradient(ellipse at center, #17233a 0%, #0b1220 75%);
   }
-  .detail-image-wrap img{ width:100%; height:100%; object-fit:cover; display:block; transition:opacity .2s ease; }
-  .detail-caption{
-    position:absolute; left:0; right:0; bottom:0; padding:20px 22px 18px;
-    background:linear-gradient(0deg, rgba(4,7,14,.9), rgba(4,7,14,0));
+  .model3d-stage model-viewer{ width:100%; height:100%; --poster-color:transparent; }
+  .model3d-badge{
+    position:absolute; left:16px; bottom:16px; padding:8px 16px; border-radius:999px;
+    background:rgba(4,7,14,.72); backdrop-filter:blur(6px); font-family:var(--font-display); font-size:12.5px;
+    color:#fff; border:1px solid rgba(255,255,255,.14); pointer-events:none;
   }
-  .detail-caption .dc-title{ font-family:var(--font-display); color:#fff; font-size:16px; margin-bottom:4px; }
-  .detail-caption .dc-text{ font-size:12.5px; line-height:1.55; color:rgba(255,255,255,.65); }
-  .detail-list{ display:flex; flex-direction:column; gap:6px; max-height:420px; overflow-y:auto; }
-  .detail-item{
+  .model3d-hintbar{
+    position:absolute; top:14px; right:16px; padding:6px 14px; border-radius:999px;
+    background:rgba(4,7,14,.6); font-size:11px; color:rgba(255,255,255,.55); pointer-events:none;
+  }
+  .model3d-loading{
+    display:flex; align-items:center; justify-content:center; height:100%; width:100%;
+    color:rgba(255,255,255,.45); font-size:13px; font-family:var(--font-display); letter-spacing:.04em;
+  }
+  .model3d-controls{ display:flex; flex-direction:column; gap:6px; }
+  .model3d-btn{
     text-align:left; font-size:13.5px; padding:12px 16px; border-radius:10px; cursor:pointer;
-    color:rgba(255,255,255,.6); background:transparent; border:1px solid transparent;
+    color:rgba(255,255,255,.6); background:transparent; border:1px solid transparent; font-family:var(--font-body);
     transition:background .2s ease, color .2s ease, border-color .2s ease;
   }
-  .detail-item:hover{ background:rgba(255,255,255,.05); color:#fff; }
-  .detail-item.active{ background:rgba(62,166,255,.12); border-color:rgba(62,166,255,.35); color:#fff; }
-  @media (max-width:820px){ .detail-stage{ grid-template-columns:1fr; } }
+  .model3d-btn:hover{ background:rgba(255,255,255,.05); color:#fff; }
+  .model3d-btn.active{ background:rgba(62,166,255,.12); border-color:rgba(62,166,255,.35); color:#fff; }
+  .model3d-hint{ margin-top:10px; font-size:12px; color:rgba(255,255,255,.4); }
+  @media (max-width:820px){ .model3d-wrap{ grid-template-columns:1fr; } }
 
   footer{
     position:relative; z-index:2; background:#080d17; border-top:1px solid rgba(255,255,255,.07);
@@ -444,46 +444,30 @@
 <section class="content" id="dettagli">
   <div class="section-head">
     <div class="eyebrow">Dettagli</div>
-    <h2>Dentro la cabina, sotto il cofano</h2>
-    <p>Foto reali di produzione: scegli un componente per esplorare cabina, comandi, motore e telaio di ogni serie.</p>
+    <h2>Sali a bordo, esplora il trattore</h2>
+    <p>Modello 3D interattivo: trascina per ruotare, scorri per zoomare, oppure scegli un componente per avvicinarti e vederne il nome.</p>
   </div>
-  <div class="detail-viewer">
-    <div class="detail-tabs">
-      <button class="detail-tab active" data-series="te">Serie TE · 25–50 HP</button>
-      <button class="detail-tab" data-series="td">Serie TD · 90–125 HP</button>
+  <div class="model3d-wrap">
+    <div class="model3d-stage">
+      <model-viewer id="tractor-viewer" src="tractor-3d.glb" alt="Modello 3D interattivo trattore Agri Tracking"
+        camera-controls auto-rotate auto-rotate-delay="1400" rotation-per-second="16deg"
+        shadow-intensity="1" exposure="1.05" environment-image="neutral" tone-mapping="commerce"
+        camera-orbit="25deg 78deg 105%" field-of-view="30deg" interaction-prompt="none"
+        style="width:100%; height:100%; background:transparent;">
+        <div class="model3d-loading" slot="poster">Caricamento modello 3D…</div>
+      </model-viewer>
+      <div class="model3d-badge" id="model3d-label">Vista d'insieme</div>
+      <div class="model3d-hintbar">Trascina · Zoom</div>
     </div>
-    <div class="detail-stage">
-      <div class="detail-image-wrap">
-        <img id="detail-image" src="detail-te-front.jpg" alt="Dettaglio trattore">
-        <div class="detail-caption">
-          <div class="dc-title" id="detail-title">Cofano e paraurti anteriore</div>
-          <div class="dc-text" id="detail-text">Struttura anteriore rinforzata con predisposizione per pesi e gancio di traino.</div>
-        </div>
-      </div>
-      <div class="detail-list" id="detail-list-te">
-        <button class="detail-item active" data-img="detail-te-front.jpg" data-title="Cofano e paraurti anteriore" data-text="Struttura anteriore rinforzata con predisposizione per pesi e gancio di traino.">Cofano anteriore</button>
-        <button class="detail-item" data-img="detail-te-engine.jpg" data-title="Vano motore" data-text="Motore Diesel Stage V con facile accesso per la manutenzione ordinaria.">Vano motore</button>
-        <button class="detail-item" data-img="detail-te-engine2.jpg" data-title="Motore, vista laterale" data-text="Layout compatto con filtro aria e marmitta a vista per interventi rapidi.">Motore, vista laterale</button>
-        <button class="detail-item" data-img="detail-te-hitch.jpg" data-title="Attacco a tre punti" data-text="Sollevatore posteriore a pressione forzata, presa di forza 540/1000.">Attacco a tre punti</button>
-        <button class="detail-item" data-img="detail-te-seat.jpg" data-title="Sedile e comandi" data-text="Sedile Grammer con bracciolo, autoradio e comandi idraulici a portata di mano.">Sedile e comandi</button>
-        <button class="detail-item" data-img="detail-te-steering.jpg" data-title="Volante regolabile" data-text="Piantone regolabile in altezza e inclinazione per la posizione di guida ideale.">Volante regolabile</button>
-        <button class="detail-item" data-img="detail-te-axle.jpg" data-title="Sospensione anteriore" data-text="Assale anteriore robusto per lavori su terreni irregolari.">Sospensione anteriore</button>
-        <button class="detail-item" data-img="detail-te-tire.jpg" data-title="Cerchi e pneumatici" data-text="Pneumatici radiali intercambiabili in base al tipo di terreno.">Cerchi e pneumatici</button>
-      </div>
-      <div class="detail-list" id="detail-list-td" style="display:none">
-        <button class="detail-item active" data-img="detail-td-light.jpg" data-title="Faro di lavoro sul tetto" data-text="Illuminazione integrata sul tetto cabina per lavorare anche al buio.">Faro sul tetto</button>
-        <button class="detail-item" data-img="detail-td-seat.jpg" data-title="Sedile Platinum" data-text="Sedile climatizzato con sospensione pneumatica per ridurre l'affaticamento.">Sedile Platinum</button>
-        <button class="detail-item" data-img="detail-td-radio.jpg" data-title="Autoradio e comandi" data-text="Pannello comandi con autoradio e interruttori per le luci ausiliarie.">Autoradio e comandi</button>
-        <button class="detail-item" data-img="detail-td-joystick.jpg" data-title="Joystick multifunzione" data-text="Comando idraulico dedicato per caricatore frontale e attrezzature.">Joystick multifunzione</button>
-        <button class="detail-item" data-img="detail-td-camera.jpg" data-title="Monitor camera 360°" data-text="Visuale a 360° intorno al mezzo per manovre in sicurezza.">Monitor camera 360°</button>
-        <button class="detail-item" data-img="detail-td-dashboard.jpg" data-title="Cruscotto digitale" data-text="Strumentazione digitale con tutti i parametri motore a colpo d'occhio.">Cruscotto digitale</button>
-        <button class="detail-item" data-img="detail-td-steering.jpg" data-title="Volante e comandi" data-text="Volante regolabile con comandi cambio e presa di forza integrati.">Volante e comandi</button>
-        <button class="detail-item" data-img="detail-td-wheel.jpg" data-title="Cerchi maggiorati" data-text="Pneumatici radiali maggiorati per trazione su grandi superfici.">Cerchi maggiorati</button>
-        <button class="detail-item" data-img="detail-td-engine.jpg" data-title="Vano motore" data-text="Motore YTO Stage V con impianto di raffreddamento maggiorato.">Vano motore</button>
-        <button class="detail-item" data-img="detail-td-battery.jpg" data-title="Vano batteria e radiatore" data-text="Accesso diretto a batteria e radiatore per la manutenzione quotidiana.">Batteria e radiatore</button>
-        <button class="detail-item" data-img="detail-td-fueltank.jpg" data-title="Serbatoio carburante" data-text="Capacità maggiorata fino a 240 litri per lunghe giornate di lavoro.">Serbatoio carburante</button>
-        <button class="detail-item" data-img="detail-td-hitch.jpg" data-title="Attacco posteriore" data-text="Attacco a tre punti categoria II con presa di forza 540/1000/1000E.">Attacco posteriore</button>
-      </div>
+    <div class="model3d-controls">
+      <button class="model3d-btn active" data-orbit="25 78 105" data-fov="30" data-label="Vista d'insieme">Vista d'insieme</button>
+      <button class="model3d-btn" data-orbit="-25 82 58" data-fov="24" data-label="Cabina di guida">Sali in cabina</button>
+      <button class="model3d-btn" data-orbit="65 80 60" data-fov="24" data-label="Cofano e vano motore">Cofano e vano motore</button>
+      <button class="model3d-btn" data-orbit="90 92 48" data-fov="22" data-label="Assale e sospensione anteriore">Assale anteriore</button>
+      <button class="model3d-btn" data-orbit="-150 85 55" data-fov="24" data-label="Attacco a tre punti posteriore">Attacco a tre punti</button>
+      <button class="model3d-btn" data-orbit="-90 98 45" data-fov="22" data-label="Cerchi e pneumatici">Cerchi e pneumatici</button>
+      <button class="model3d-btn" data-orbit="180 78 95" data-fov="28" data-label="Vista posteriore">Vista posteriore</button>
+      <div class="model3d-hint">Modello 3D dimostrativo generato digitalmente, a scopo illustrativo: per foto reali dei singoli allestimenti vedi la sezione Gamma.</div>
     </div>
   </div>
 </section>
@@ -711,42 +695,51 @@ if(implSlider){
   });
 }
 
-/* ============ DETTAGLI (esplora cabina/motore) ============ */
-const detailImage = document.getElementById('detail-image');
-const detailTitle = document.getElementById('detail-title');
-const detailText = document.getElementById('detail-text');
-const detailListTE = document.getElementById('detail-list-te');
-const detailListTD = document.getElementById('detail-list-td');
-if(detailImage){
-  function setDetail(btn){
-    detailImage.style.opacity = 0;
-    setTimeout(() => {
-      detailImage.src = btn.dataset.img;
-      detailTitle.textContent = btn.dataset.title;
-      detailText.textContent = btn.dataset.text;
-      detailImage.style.opacity = 1;
-    }, 140);
+/* ============ DETTAGLI: SHOWCASE 3D INTERATTIVO ============ */
+const tractorViewer = document.getElementById('tractor-viewer');
+if(tractorViewer){
+  const model3dLabel = document.getElementById('model3d-label');
+  const model3dBtns = document.querySelectorAll('.model3d-btn');
+  let curOrbit = {theta:25, phi:78, radius:105};
+  let curFov = 30;
+  let rafId = null;
+
+  function animateTo(theta, phi, radius, fov, duration){
+    if(rafId) cancelAnimationFrame(rafId);
+    const from = {...curOrbit};
+    const fovFrom = curFov;
+    const start = performance.now();
+    function step(now){
+      const t = Math.min(1, (now-start)/duration);
+      const e = t < .5 ? 2*t*t : 1-Math.pow(-2*t+2, 2)/2;
+      const th = from.theta + (theta-from.theta)*e;
+      const ph = from.phi + (phi-from.phi)*e;
+      const ra = from.radius + (radius-from.radius)*e;
+      const fv = fovFrom + (fov-fovFrom)*e;
+      tractorViewer.cameraOrbit = th.toFixed(2) + 'deg ' + ph.toFixed(2) + 'deg ' + ra.toFixed(2) + '%';
+      tractorViewer.fieldOfView = fv.toFixed(2) + 'deg';
+      if(t < 1){ rafId = requestAnimationFrame(step); }
+      else { curOrbit = {theta, phi, radius}; curFov = fov; rafId = null; }
+    }
+    rafId = requestAnimationFrame(step);
   }
-  document.querySelectorAll('.detail-item').forEach(btn => {
+
+  model3dBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      btn.parentElement.querySelectorAll('.detail-item').forEach(b => b.classList.remove('active'));
+      model3dBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      setDetail(btn);
+      model3dLabel.textContent = btn.dataset.label;
+      tractorViewer.removeAttribute('auto-rotate');
+      const [th, ph, ra] = btn.dataset.orbit.split(/\s+/).map(Number);
+      const fov = parseFloat(btn.dataset.fov);
+      animateTo(th, ph, ra, fov, 900);
     });
   });
-  document.querySelectorAll('.detail-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.detail-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      const series = tab.dataset.series;
-      const activeList = series === 'te' ? detailListTE : detailListTD;
-      detailListTE.style.display = series === 'te' ? 'flex' : 'none';
-      detailListTD.style.display = series === 'td' ? 'flex' : 'none';
-      activeList.querySelectorAll('.detail-item').forEach(b => b.classList.remove('active'));
-      const firstBtn = activeList.querySelector('.detail-item');
-      firstBtn.classList.add('active');
-      setDetail(firstBtn);
-    });
+
+  tractorViewer.addEventListener('camera-change', (e) => {
+    if(e.detail && e.detail.source === 'user-interaction'){
+      tractorViewer.removeAttribute('auto-rotate');
+    }
   });
 }
 
